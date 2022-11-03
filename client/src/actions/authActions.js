@@ -10,8 +10,13 @@ import {
   SET_CURRENT_USER
 } from './actionTypes';
 
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:5000',
+  timeout: 30000,
+})
+
 export const registerUser = user => (dispatch) => {
-  axios
+  axiosInstance
     .post('/users/signup', user)
     .then((res) => {
       dispatch({
@@ -30,7 +35,7 @@ export const registerUser = user => (dispatch) => {
 };
 
 export const loginUser = user => (dispatch) => {
-  axios
+  axiosInstance
     .post('/users/login', user)
     .then((res) => {
       const { token } = res.data;
@@ -60,7 +65,7 @@ export const updateCurrentUser = (
   userId,
   showEmail
 ) => dispatch =>
-  axios
+axiosInstance
     .patch(`/users/${userId}`, { avatarColor, bio, email, name, showEmail })
     .then((res) => {
       const { token } = res.data;

@@ -7,9 +7,6 @@ const User = require('../models/userModel');
 
 const router = new express.Router();
 
-// Authentication builds on Maximilian Schwarzmüller's guide:
-// https://www.youtube.com/watch?v=0D5EEKH97NA
-
 // Get all users
 router.get('/', async (req, res) => {
   const users = await User.find();
@@ -59,14 +56,14 @@ router.post('/signup', async (req, res) => {
 // Log in a user
 router.post('/login', async (req, res) => {
   const { errors, isValid } = validateLogin(req.body);
-  console.log("hello")
+  console.log('hello');
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
   try {
     const user = await User.findOne({ email: req.body.email }).exec();
-    console.log("hello")
+    console.log('hello');
     if (!user) {
       return res.status(401).json({
         email: 'Could not find email.'
@@ -74,14 +71,14 @@ router.post('/login', async (req, res) => {
     }
 
     return bcrypt.compare(req.body.password, user.password, (err, result) => {
-      console.log("hello")
+      console.log('hello');
       if (err) {
         return res.status(401).json({
           message: 'Auth failed.'
         });
       }
       if (result) {
-        console.log("hello")
+        console.log('hello');
         const token = jwt.sign(
           {
             avatarColor: user.avatarColor,
@@ -91,7 +88,7 @@ router.post('/login', async (req, res) => {
             showEmail: user.showEmail,
             userId: user._id
           },
-          "mongodb://localhost:27017",
+          'mongodb://localhost:27017',
           {
             expiresIn: '1h'
           }
@@ -106,7 +103,7 @@ router.post('/login', async (req, res) => {
       });
     });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).json({ message: err });
   }
 });

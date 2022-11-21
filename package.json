@@ -4,7 +4,7 @@
   "description": "Social network app to be created with MERN stack. Work in progress.",
   "main": "index.js",
   "engines": {
-    "node": "10.9.0"
+    "node": "19.1.0"
   },
   "scripts": {
     "test": "cd client && npm test",
@@ -36,11 +36,12 @@
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
+    "prettier": "^2.7.1",
     "validator": "^13.7.0"
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",
-    "eslint": "^5.4.0",
+    "eslint": "^8.28.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",

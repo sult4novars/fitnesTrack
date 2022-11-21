@@ -1,9 +1,9 @@
-const bcrypt = require('bcrypt');
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const validateLogin = require('../validation/validateLogin');
-const validateSignup = require('../validation/validateSignup');
-const User = require('../models/userModel');
+import bcrypt from 'bcrypt';
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import validateLogin from '../validation/validateLogin';
+import validateSignup from '../validation/validateSignup';
+import User from '../models/userModel';
 
 const router = new express.Router();
 
@@ -196,7 +196,7 @@ router.patch('/following/:id', async (req, res) => {
       }
     );
   } catch (e) {
-    return res.status(500).json(err);
+    return res.status(500).json(e.message);
   }
 });
 
@@ -221,7 +221,7 @@ router.patch('/unfollowing/:id', async (req, res) => {
       }
     );
   } catch (e) {
-    return res.status(500).json(err);
+    return res.status(500).json(e.message);
   }
 });
 
@@ -246,7 +246,7 @@ router.patch('/followers/:id', async (req, res) => {
       }
     );
   } catch (e) {
-    return res.status(500).json(err);
+    return res.status(500).json(e.message);
   }
 });
 
@@ -271,7 +271,7 @@ router.patch('/unfollowers/:id', async (req, res) => {
       }
     );
   } catch (e) {
-    return res.status(500).json(err);
+    return res.status(500).json(e.message);
   }
 });
 
@@ -285,4 +285,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

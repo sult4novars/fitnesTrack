@@ -1,6 +1,6 @@
-const express = require('express');
-const { ObjectID } = require('mongodb');
-const Post = require('../models/postModel');
+import express from 'express';
+import { ObjectID } from 'mongodb';
+import Post from '../models/postModel';
 
 const router = new express.Router();
 
@@ -162,4 +162,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

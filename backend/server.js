@@ -1,11 +1,12 @@
-const bodyParser = require('body-parser');
-const express = require('express');
-const logger = require('morgan');
-const mongoose = require('mongoose');
-const path = require('path');
-const posts = require('./routes/postRoute');
-const users = require('./routes/userRoute');
-const dbURI = require('./secrets').dbURI;
+import bodyParser from 'body-parser';
+import express from 'express';
+import logger from 'morgan';
+import mongoose from 'mongoose';
+import path from 'path';
+import posts from './routes/postRoute';
+import users from './routes/userRoute';
+// import dbURI from './secrets'.dbURI;
+
 
 const app = express();
 const port = 5000;

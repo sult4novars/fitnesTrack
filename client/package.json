@@ -5,6 +5,10 @@
   "dependencies": {
     "@material-ui/core": "^3.0.2",
     "@material-ui/icons": "^3.0.1",
+    "@types/jest": "^29.2.3",
+    "@types/node": "^18.11.9",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
     "axios": "^0.21.2",
     "classnames": "^2.2.6",
     "enzyme": "^3.5.0",
@@ -20,12 +24,13 @@
     "react-ga": "^2.5.3",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.5",
+    "react-scripts": "^5.0.1",
     "react-with-analytics": "0.0.5",
     "recompose": "^0.30.0",
     "redux": "^4.0.0",
     "redux-devtools-extension": "^2.13.5",
     "redux-thunk": "^2.3.0",
+    "typescript": "^4.9.3",
     "uuid": "^3.3.2",
     "validator": "^13.7.0"
   },
@@ -36,6 +41,9 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "@types/enzyme": "^3.10.12",
+    "@types/jwt-decode": "^3.1.0",
+    "@types/react-redux": "^7.1.24",
     "babel-eslint": "^9.0.0",
     "eslint": "^5.4.0",
     "eslint-config-airbnb": "^17.1.0",
@@ -45,5 +53,17 @@
     "moxios": "^0.4.0",
     "react-test-renderer": "^16.4.2",
     "redux-mock-store": "^1.5.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

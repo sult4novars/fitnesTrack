@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import * as moment from 'moment';
-
 import { withStyles } from '@material-ui/core/styles';
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,7 +15,7 @@ import UserAvatar from './UserAvatar';
 const options = ['Edit', 'Delete'];
 const ITEM_HEIGHT = 48;
 
-const styles = theme => ({
+const styles = (theme: any) => ({
   cardHeader: {
     paddingTop: theme.spacing.unit,
     paddingBottom: theme.spacing.unit
@@ -41,38 +40,61 @@ const styles = theme => ({
   }
 });
 
-class CommentBody extends Component {
-  state = {
-    anchorEl: null,
-    avatarColor: 18,
-    modalOpen: false,
-    name: ''
-  };
+function CommentBody(
+  classes,
+  commentId,
+  commenterId,
+  deleteComment,
+  editComment,
+  getUser,
+  postId,
+  signedInUserId,
+  timestamp,
+  text
+) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [avatarColor, setAvatarColor] = useState(18);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [name, setName] = useState('');
 
-  componentDidMount = () => {
-    const { commenterId, getUser } = this.props;
-    getUser(commenterId).then((res) => {
-      this.setState({
-        avatarColor: res.payload.user.avatarColor,
-        name: res.payload.user.name
-      });
+  //old state = {
+  //   anchorEl: null,
+  //   avatarColor: 18,
+  //   modalOpen: false,
+  //   name: ''
+  // };
+
+  useEffect(() => {
+    getUser(commenterId).then((res: any) => {
+      setAvatarColor(res.payload.user.avatarColor),
+      setName(res.payload.user.name)  
     });
+  }, [])
+
+  //old componentDidMount = () => {
+  //   const { commenterId, getUser } = this.props;
+  //   getUser(commenterId).then((res: any) => {
+  //     this.setState({
+  //       avatarColor: res.payload.user.avatarColor,
+  //       name: res.payload.user.name
+  //     });
+  //   });
+  // };
+
+  const handleClick = (event: { currentTarget: any; }) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  handleClick = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
+  const handleClose = () => {
+   setAnchorEl(null);
   };
 
-  handleClose = () => {
-    this.setState({ anchorEl: null });
+  const handleModalOpen = () => {
+    setModalOpen(true);
   };
 
-  handleModalOpen = () => {
-    this.setState({ modalOpen: true });
-  };
-
-  handleModalClose = () => {
-    this.setState({ modalOpen: false });
+  const handleModalClose = () => {
+    setModalOpen(false);
   };
 
   render() {
@@ -121,7 +143,7 @@ class CommentBody extends Component {
                       aria-label="More"
                       aria-owns={open ? 'long-menu' : null}
                       aria-haspopup="true"
-                      onClick={this.handleClick}
+                      onClick={(e) => handleClick(e)}
                     >
                       <MoreVertIcon />
                     </IconButton>
@@ -141,7 +163,7 @@ class CommentBody extends Component {
                         <MenuItem
                           key={option}
                           onClick={() =>
-                            this.handleClose() ||
+                            handleClose ||
                             (option === 'Delete'
                               ? deleteComment(
                                   'deleteComment',

@@ -1,34 +1,34 @@
-import bcrypt from 'bcrypt';
-import express from 'express';
-import jwt from 'jsonwebtoken';
-import validateLogin from '../validation/validateLogin';
-import validateSignup from '../validation/validateSignup';
-import User from '../models/userModel';
+import bcrypt from 'bcrypt'
+import express from 'express'
+import jwt from 'jsonwebtoken'
+import validateLogin from '../validation/validateLogin.js'
+import validateSignup from '../validation/validateSignup.js'
+import User from '../models/userModel.js'
 
-const router = new express.Router();
+const router = new express.Router()
 
 // Get all users
 router.get('/', async (req, res) => {
-  const users = await User.find();
-  res.status(200).json(users);
-});
+  const users = await User.find()
+  res.status(200).json(users)
+})
 
 // Sign up a user
 router.post('/signup', async (req, res) => {
-  const { errors, isValid } = validateSignup(req.body);
+  const { errors, isValid } = validateSignup(req.body)
 
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(400).json(errors)
   }
 
   try {
-    const user = await User.find({ email: req.body.email }).exec();
+    const user = await User.find({ email: req.body.email }).exec()
     if (user.length > 0) {
-      return res.status(409).json({ error: 'Email already exists.' });
+      return res.status(409).json({ error: 'Email already exists.' })
     }
     return bcrypt.hash(req.body.password, 10, (error, hash) => {
       if (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error })
       }
       const newUser = new User({
         avatarColor: Math.floor(Math.random() * 18) + 1,
@@ -37,48 +37,48 @@ router.post('/signup', async (req, res) => {
         name: req.body.name,
         password: hash,
         passwordConfirm: hash,
-        showEmail: true
-      });
+        showEmail: true,
+      })
       return newUser
         .save()
-        .then((result) => {
-          res.status(201).json({ result });
+        .then(result => {
+          res.status(201).json({ result })
         })
-        .catch((err) => {
-          res.status(500).json({ error: err });
-        });
-    });
+        .catch(err => {
+          res.status(500).json({ error: err })
+        })
+    })
   } catch (err) {
-    return res.status(500).json({ err });
+    return res.status(500).json({ err })
   }
-});
+})
 
 // Log in a user
 router.post('/login', async (req, res) => {
-  const { errors, isValid } = validateLogin(req.body);
-  console.log('hello');
+  const { errors, isValid } = validateLogin(req.body)
+  console.log('hello')
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(400).json(errors)
   }
 
   try {
-    const user = await User.findOne({ email: req.body.email }).exec();
-    console.log('hello');
+    const user = await User.findOne({ email: req.body.email }).exec()
+    console.log('hello')
     if (!user) {
       return res.status(401).json({
-        email: 'Could not find email.'
-      });
+        email: 'Could not find email.',
+      })
     }
 
     return bcrypt.compare(req.body.password, user.password, (err, result) => {
-      console.log('hello');
+      console.log('hello')
       if (err) {
         return res.status(401).json({
-          message: 'Auth failed.'
-        });
+          message: 'Auth failed.',
+        })
       }
       if (result) {
-        console.log('hello');
+        console.log('hello')
         const token = jwt.sign(
           {
             avatarColor: user.avatarColor,
@@ -86,47 +86,47 @@ router.post('/login', async (req, res) => {
             name: user.name,
             email: user.email,
             showEmail: user.showEmail,
-            userId: user._id
+            userId: user._id,
           },
           'mongodb://localhost:27017',
           {
-            expiresIn: '1h'
+            expiresIn: '1h',
           }
-        );
+        )
         return res.status(200).json({
           message: 'Auth successful.',
-          token
-        });
+          token,
+        })
       }
       return res.status(401).json({
-        password: 'Wrong password. Try again.'
-      });
-    });
+        password: 'Wrong password. Try again.',
+      })
+    })
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: err });
+    console.log(err)
+    return res.status(500).json({ message: err })
   }
-});
+})
 
 // Get a user by their id
 router.get('/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id)
     if (user) {
-      res.json({ user });
+      res.json({ user })
     } else {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: 'User not found' })
     }
   } catch (err) {
-    res.status(500).json({ err });
+    res.status(500).json({ err })
   }
-});
+})
 
 // Update a user's information
 router.patch('/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
   try {
     const user = await User.findOneAndUpdate(
@@ -137,20 +137,18 @@ router.patch('/:id', async (req, res) => {
           bio: req.body.bio || '',
           email: req.body.email,
           name: req.body.name,
-          showEmail: req.body.showEmail
-        }
+          showEmail: req.body.showEmail,
+        },
       },
       { new: true, upsert: true, setDefaultsOnInsert: true },
-      (err) => {
+      err => {
         if (err != null && err.name === 'MongoError' && err.code === 11000) {
-          return res
-            .status(500)
-            .send({ message: 'This email is already in use.' });
+          return res.status(500).send({ message: 'This email is already in use.' })
         }
       }
-    );
+    )
     if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: 'User not found.' })
     }
 
     const token = jwt.sign(
@@ -161,26 +159,26 @@ router.patch('/:id', async (req, res) => {
         name: user.name,
         email: user.email,
         showEmail: user.showEmail,
-        userId: user._id
+        userId: user._id,
       },
       process.env.REACT_APP_JWT_KEY || require('../secrets').jwtKey,
       {
-        expiresIn: '24h'
+        expiresIn: '24h',
       }
-    );
+    )
 
-    return res.json({ user, token });
+    return res.json({ user, token })
   } catch (err) {
-    return res.status(500).json({ message: err });
+    return res.status(500).json({ message: err })
   }
-});
+})
 
 // Add a user to the list of users you are following
 router.patch('/following/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
   if (!req.body.idToFollow) {
-    return res.status(404).json({ message: 'No ID found' });
+    return res.status(404).json({ message: 'No ID found' })
   }
 
   try {
@@ -190,22 +188,22 @@ router.patch('/following/:id', async (req, res) => {
       { new: true, upsert: true },
       (err, doc) => {
         if (err) {
-          return res.status(400).json(err);
+          return res.status(400).json(err)
         }
-        return res.status(201).json(doc);
+        return res.status(201).json(doc)
       }
-    );
+    )
   } catch (e) {
-    return res.status(500).json(e.message);
+    return res.status(500).json(e.message)
   }
-});
+})
 
 // Remove a user from the list of users you are following
 router.patch('/unfollowing/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
   if (!req.body.idToUnfollow) {
-    return res.status(404).json({ message: 'No ID found' });
+    return res.status(404).json({ message: 'No ID found' })
   }
 
   try {
@@ -215,22 +213,22 @@ router.patch('/unfollowing/:id', async (req, res) => {
       { new: true, upsert: true },
       (err, doc) => {
         if (err) {
-          return res.status(400).json(err);
+          return res.status(400).json(err)
         }
-        return res.status(200).json(doc);
+        return res.status(200).json(doc)
       }
-    );
+    )
   } catch (e) {
-    return res.status(500).json(e.message);
+    return res.status(500).json(e.message)
   }
-});
+})
 
 // Add a user to the list of users that are following you
 router.patch('/followers/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
   if (!req.body.followerId) {
-    return res.status(404).json({ message: 'No ID found' });
+    return res.status(404).json({ message: 'No ID found' })
   }
 
   try {
@@ -240,22 +238,22 @@ router.patch('/followers/:id', async (req, res) => {
       { new: true, upsert: true },
       (err, doc) => {
         if (err) {
-          return res.status(400).json(err);
+          return res.status(400).json(err)
         }
-        return res.status(201).json(doc);
+        return res.status(201).json(doc)
       }
-    );
+    )
   } catch (e) {
-    return res.status(500).json(e.message);
+    return res.status(500).json(e.message)
   }
-});
+})
 
 // Remove a user from the list of users that are following you
 router.patch('/unfollowers/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
   if (!req.body.unfollowerId) {
-    return res.status(404).json({ message: 'No ID found' });
+    return res.status(404).json({ message: 'No ID found' })
   }
 
   try {
@@ -265,24 +263,24 @@ router.patch('/unfollowers/:id', async (req, res) => {
       { new: true, upsert: true },
       (err, doc) => {
         if (err) {
-          return res.status(400).json(err);
+          return res.status(400).json(err)
         }
-        return res.status(200).json(doc);
+        return res.status(200).json(doc)
       }
-    );
+    )
   } catch (e) {
-    return res.status(500).json(e.message);
+    return res.status(500).json(e.message)
   }
-});
+})
 
 // Delete a user
 router.delete('/:id', async (req, res) => {
   try {
-    await User.remove({ _id: req.params.id }).exec();
-    res.status(200).json({ message: 'Successfully deleted user.' });
+    await User.remove({ _id: req.params.id }).exec()
+    res.status(200).json({ message: 'Successfully deleted user.' })
   } catch (err) {
-    res.status(500).json({ message: err });
+    res.status(500).json({ message: err })
   }
-});
+})
 
-export default router;
+export default router

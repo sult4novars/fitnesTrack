@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Identifier } from 'typescript';
 import {
   GET_FOLLOWERS,
   GET_FOLLOWING,
@@ -8,7 +9,7 @@ import {
   UPDATE_FOLLOWING
 } from './actionTypes';
 
-export const followUser = (signedInUserId, idToFollow) => async (dispatch) => {
+export const followUser = (signedInUserId: Identifier, idToFollow: Identifier) => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
   const followResult = await axios.patch(`/users/following/${signedInUserId}`, {
     idToFollow
   });
@@ -29,9 +30,9 @@ export const followUser = (signedInUserId, idToFollow) => async (dispatch) => {
 };
 
 export const unfollowUser = (
-  signedInUserId,
-  idToUnfollow
-) => async (dispatch) => {
+  signedInUserId: any,
+  idToUnfollow: any
+) => async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
   const unfollowResult = await axios.patch(
     `/users/unfollowing/${signedInUserId}`,
     {
@@ -54,7 +55,7 @@ export const unfollowUser = (
   });
 };
 
-export const getFollowers = userId => async (dispatch) => {
+export const getFollowers = (userId: any) => async (dispatch: (arg0: { type: string; payload: any; }) => any) => {
   const result = await axios.get(`/users/${userId}`);
   return dispatch({
     type: GET_FOLLOWERS,
@@ -62,7 +63,7 @@ export const getFollowers = userId => async (dispatch) => {
   });
 };
 
-export const getFollowing = userId => async (dispatch) => {
+export const getFollowing = (userId: any) => async (dispatch: (arg0: { type: string; payload: any; }) => any) => {
   const result = await axios.get(`/users/${userId}`);
   return dispatch({
     type: GET_FOLLOWING,
@@ -70,7 +71,7 @@ export const getFollowing = userId => async (dispatch) => {
   });
 };
 
-export const getUser = userId => async (dispatch) => {
+export const getUser = (userId: any) => async (dispatch: (arg0: { type: string; payload: any; }) => any) => {
   const result = await axios.get(`/users/${userId}`);
   return dispatch({
     type: GET_USER,
@@ -78,7 +79,7 @@ export const getUser = userId => async (dispatch) => {
   });
 };
 
-export const getAllUsers = () => async (dispatch) => {
+export const getAllUsers = () => async (dispatch: (arg0: { type: string; payload: any; }) => any) => {
   const result = await axios.get('/users');
   return dispatch({
     type: GET_ALL_USERS,

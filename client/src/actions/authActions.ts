@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
   timeout: 30000,
 })
 
-export const registerUser = user => dispatch => {
+export const registerUser = (user: any) => (dispatch: (arg0: { type: string; payload: any }) => void) => {
   axiosInstance
     .post('/users/signup', user)
     .then(() => {
@@ -27,7 +27,7 @@ export const registerUser = user => dispatch => {
     })
 }
 
-export const loginUser = user => dispatch => {
+export const loginUser = (user: any) => (dispatch: (arg0: { type: string; payload: any }) => void) => {
   axiosInstance
     .post('/users/login', user)
     .then(res => {
@@ -45,12 +45,12 @@ export const loginUser = user => dispatch => {
     })
 }
 
-export const setCurrentUser = decoded => ({
+export const setCurrentUser = (decoded: unknown) => ({
   type: SET_CURRENT_USER,
   payload: decoded,
 })
 
-export const updateCurrentUser = (avatarColor, bio, email, name, userId, showEmail) => dispatch =>
+export const updateCurrentUser = (avatarColor: any, bio: any, email: any, name: any, userId: any, showEmail: any) => (dispatch: (arg0: { type: string; payload: any }) => void) =>
   axiosInstance
     .patch(`/users/${userId}`, { avatarColor, bio, email, name, showEmail })
     .then(res => {
@@ -62,7 +62,7 @@ export const updateCurrentUser = (avatarColor, bio, email, name, userId, showEma
     })
     .catch(err => console.log(err))
 
-export const logoutUser = () => dispatch => {
+export const logoutUser = () => (dispatch: (arg0: { type: string; payload: any }) => void) => {
   localStorage.removeItem('jwtToken')
   setAuthToken(false)
   dispatch(setCurrentUser({}))
